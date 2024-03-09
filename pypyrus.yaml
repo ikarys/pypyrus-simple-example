@@ -1,0 +1,24 @@
+var_simple_var:
+  input: "Simple variable"
+  required : true
+var_my_project_name:
+  input: "Project title"
+  default: "My project"
+var_use_central_log:
+  input: "Do you want to use the central log?"
+  choices: [true, false]
+  default: false
+var_colors:
+  input: "Do you want to use colors?"
+  choices: ["yes", "no"]
+  default: "yes"
+var_central_log_url:
+  input: "Central log URL"
+  default: "http://localhost:8080"
+  condition:
+    - source: var_use_central_log
+      operator: "=="
+      value: true
+    - source: var_colors
+      operator: "!="
+      value: "yes"
