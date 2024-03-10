@@ -2,18 +2,15 @@ from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ValidationError, field_validator, validator
 
-
 class Condition:
     source: str
     operator: Literal["==", "!=", "<", "<=", ">", ">="]
     value: Any
 
-
 class VarConditions(BaseModel):
     source: str
     operator: str
     value: Any
-
 
 class Var(BaseModel):
     input: Optional[str]
@@ -32,12 +29,5 @@ class Var(BaseModel):
 
         return value
 
-
 class PapyrusSchema(BaseModel):
     vars: Dict[str, Var]
-
-    @field_validator("vars")
-    def validate_keys(cls, vars):
-        for k in vars:
-            assert k.startswith("var_"), "Keys must start with var_"
-        return vars

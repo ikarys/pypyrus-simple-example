@@ -1,16 +1,25 @@
 import os
+from typing import Union
 from jinja2 import Environment, FileSystemLoader
+from jinja2_filters import PypyrusFilters
+
+def configure_jinja_environment(template_dir: Union[str, None] = None) -> Environment:
+    env = Environment()
+    if template_dir is not None:
+        env = Environment(loader=FileSystemLoader(template_dir))
+    env.filters.update({
+        'slug': PypyrusFilters.slug
+    })
+    return env
 
 def render_folder_name(folder_name, variables):
-    return Environment().from_string(folder_name).render(variables)
+    return configure_jinja_environment().from_string(folder_name).render(variables)
 
 def render_file(file_path, variables):
     with open(file_path, 'r') as file:
         content = file.read()
     template_dir = os.path.dirname(file_path)
-    loader = FileSystemLoader(template_dir)
-    env = Environment(loader=loader)
-    template = env.get_template(os.path.basename(file_path))
+    template = configure_jinja_environment(template_dir).get_template(os.path.basename(file_path))
     return template.render(variables)
 
 def process_folder(source_folder, target_folder, variables):
@@ -23,6 +32,8 @@ def process_folder(source_folder, target_folder, variables):
 
         # Process files in the current directory and its subdirectories
         for file in files:
+            if file == "pypyrus.yaml":
+                continue
             source_file_path = os.path.join(root, file)
             target_file_path = os.path.join(target_path, file)
 

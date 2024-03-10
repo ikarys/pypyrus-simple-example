@@ -13,7 +13,6 @@ env = Environment()
 class PypyarusYamlParser:
     __user_inputs: Dict = {}
     __data: Dict[str, Var] = {}
-    __schema: PapyrusSchema
 
     def __init__(self, yaml_file: str) -> None:
         self.yaml_file = yaml_file
@@ -22,7 +21,12 @@ class PypyarusYamlParser:
     def __load_yaml(self) -> None:
         with open(self.yaml_file, "r") as file:
             self.__data = yaml.safe_load(file)
-        self.__schema = self.validate()
+        self.convert_simple_key()
+
+    def convert_simple_key(self) -> None:
+        for key, value in self.__data.items():
+            if isinstance(value, str):
+                self.__data[key] = dict(input=key, default=value)
 
     def validate(self) -> PapyrusSchema:
         try:
