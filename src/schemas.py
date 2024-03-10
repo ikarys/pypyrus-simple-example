@@ -2,15 +2,18 @@ from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ValidationError, field_validator, validator
 
+
 class Condition:
     source: str
     operator: Literal["eq", "ne", "lt", "lte", "gt", "gte", "in", "nin"]
     value: Any
 
+
 class VarConditions(BaseModel):
     source: str
     operator: str
     value: Any
+
 
 class Var(BaseModel):
     input: Optional[str]
@@ -28,6 +31,7 @@ class Var(BaseModel):
             raise ValueError("Default value must be in choices")
 
         return value
+
 
 class PapyrusSchema(BaseModel):
     vars: Dict[str, Var]

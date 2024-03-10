@@ -1,11 +1,11 @@
 from typing import Any, Dict
 
 import questionary as q
+from icecream import ic
 from loguru import logger
 
 from schemas import Var
 
-from icecream import ic
 
 def evaluate_condition(condition: Dict[str, Any], user_inputs: Dict[str, Any]) -> bool:
     """

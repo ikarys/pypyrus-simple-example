@@ -1,0 +1,14 @@
+# Pypyrus
+
+Pypyrus is a file generation tool similar to Cookiecutter, utilizing Jinja2 and YAML. It enables the creation of files by prompting the user with questions and utilizing the responses to populate templates. Pypyrus supports conditions on questions, allowing the dynamic display or concealment of certain questions based on previous responses.
+
+## Installation
+
+Pypyrus can be installed via pip:
+
+```bash
+pip install pypyrus
+```
+
+## Usage
+
