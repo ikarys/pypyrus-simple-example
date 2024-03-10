@@ -10,7 +10,7 @@ from schemas import PapyrusSchema, Var
 env = Environment()
 
 
-class PypyarusYamlParser:
+class PypyrusYamlParser:
     __user_inputs: Dict = {}
     __data: Dict[str, Var] = {}
 

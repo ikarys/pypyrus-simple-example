@@ -32,18 +32,22 @@ def evaluate_condition(condition: Dict[str, Any], user_inputs: Dict[str, Any]) -
         return False
 
     match operator:
-        case "==":
+        case "eq":
             return user_inputs[source] == value
-        case "!=":
+        case "ne":
             return user_inputs[source] != value
-        case "<":
+        case "lt":
             return user_inputs[source] < value
-        case "<=":
+        case "lte":
             return user_inputs[source] <= value
-        case ">":
+        case "gt":
             return user_inputs[source] > value
-        case ">=":
+        case "gte":
             return user_inputs[source] >= value
+        case "in":
+            return value in user_inputs[source]
+        case "nin":
+            return value not in user_inputs[source]
         case _:
             raise ValueError(f"`{operator}` Invalid operator for condition")
 

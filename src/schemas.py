@@ -4,7 +4,7 @@ from pydantic import BaseModel, ValidationError, field_validator, validator
 
 class Condition:
     source: str
-    operator: Literal["==", "!=", "<", "<=", ">", ">="]
+    operator: Literal["eq", "ne", "lt", "lte", "gt", "gte", "in", "nin"]
     value: Any
 
 class VarConditions(BaseModel):
