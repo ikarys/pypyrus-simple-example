@@ -1,0 +1,3 @@
+var_simple_var:
+  required : true
+  bad_params: "This is not a valid parameter"

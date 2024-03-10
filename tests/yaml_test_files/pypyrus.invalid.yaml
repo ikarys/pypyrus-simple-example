@@ -1,0 +1,4 @@
+var_simple_var:
+  input: "Simple variable"
+  required : true
+var_my_project_name

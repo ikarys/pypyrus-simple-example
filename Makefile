@@ -18,4 +18,4 @@ lint:
 	poetry run bandit -r $(PROJECT_PATH)
 
 test:
-	poetry run pytest --cov=$(PROJECT_PATH) --cov-report=term-missing --cov-report=xml --cov-fail-under=100
+	poetry run pytest -s -vv

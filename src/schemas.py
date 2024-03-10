@@ -1,9 +1,15 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, field_validator, validator
+from pydantic import BaseModel, ValidationError, field_validator, validator
 
 
-class VarCondition(BaseModel):
+class Condition:
+    source: str
+    operator: Literal["==", "!=", "<", "<=", ">", ">="]
+    value: Any
+
+
+class VarConditions(BaseModel):
     source: str
     operator: str
     value: Any
@@ -13,7 +19,7 @@ class Var(BaseModel):
     input: Optional[str]
     default: Optional[Any] = None
     required: Optional[bool] = True
-    condition: List[VarCondition] | None = None
+    conditions: List[VarConditions] | None = None
     choices: Optional[List[Any]] = None
 
     @validator("choices")

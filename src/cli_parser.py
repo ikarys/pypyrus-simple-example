@@ -1,9 +1,50 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import questionary as q
 from loguru import logger
 
 from schemas import Var
+
+
+def evaluate_condition(condition: Dict[str, Any], user_inputs: Dict[str, Any]) -> bool:
+    """
+    Evaluate a condition based on user inputs.
+
+    Args:
+        condition (Dict[str, Any]): A dictionary containing the condition to evaluate, with the following keys:
+            - source (str): The name of the user input to evaluate.
+            - operator (str): The comparison operator to use. Must be one of "==", "!=", "<", "<=", ">", or ">=".
+            - value: The value to compare the user input to.
+        user_inputs (Dict[str, Any]): A dictionary containing the user inputs.
+
+    Returns:
+        bool: True if the condition is met, False otherwise.
+
+    Raises:
+        ValueError: If the operator is not a valid comparison operator.
+    """
+    source = condition.get("source")
+    operator = condition.get("operator")
+    value = condition.get("value")
+
+    if source not in user_inputs:
+        return False
+
+    match operator:
+        case "==":
+            return user_inputs[source] == value
+        case "!=":
+            return user_inputs[source] != value
+        case "<":
+            return user_inputs[source] < value
+        case "<=":
+            return user_inputs[source] <= value
+        case ">":
+            return user_inputs[source] > value
+        case ">=":
+            return user_inputs[source] >= value
+        case _:
+            raise ValueError(f"`{operator}` Invalid operator for condition")
 
 
 def prompt_user_for_input(variable: Dict) -> Any:
@@ -28,7 +69,6 @@ def prompt_user_for_input(variable: Dict) -> Any:
         else:
             return choices_prompt
     else:
-        logger.debug(required)
         input_prompt = q.text(
             f"{input_text}:",
             default=str(default_value if default_value is not None else ""),
@@ -41,17 +81,10 @@ def process_variables(data: Dict[str, Var]) -> Dict[str, Any]:
     user_inputs = {}
 
     for var_name, var in data.items():
-        if getattr(var, "condition", None) is not None:
-            conditions = var.condition
-
-            if conditions is not None:
-                conditions_met = all(
-                    c.source in user_inputs and eval(f"user_inputs['{c.source}'] {c.operator} {repr(c.value)}")
-                    for c in conditions
-                )
-
-                if not conditions_met:
-                    continue
+        conditions = var.get("conditions", None)
+        if conditions is not None:
+            if not all(evaluate_condition(c, user_inputs) for c in conditions):
+                continue
 
         user_inputs[var_name] = prompt_user_for_input(var)
 

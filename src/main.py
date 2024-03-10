@@ -6,6 +6,7 @@ from loguru import logger
 from cli_parser import process_variables
 from schemas import Var
 from yaml_parser import PypyarusYamlParser
+from generator import process_folder
 
 
 def run(yaml_file):
@@ -16,9 +17,12 @@ def run(yaml_file):
     try:
         user_inputs = process_variables(data)
         print("User inputs:", user_inputs)
-    except ValueError as e:
-        print("Validation failed:", e)
+        process_folder("my_test/", "target_folder", user_inputs)
+    except ValueError as err:
+        logger.error(err)
+        print(err)
+        return
 
 
 if __name__ == "__main__":
-    run("pypyrus.yaml")
+    run("my_test/pypyrus.yaml")

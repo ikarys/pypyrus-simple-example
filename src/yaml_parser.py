@@ -22,13 +22,14 @@ class PypyarusYamlParser:
     def __load_yaml(self) -> None:
         with open(self.yaml_file, "r") as file:
             self.__data = yaml.safe_load(file)
-        self.validate()
+        self.__schema = self.validate()
 
-    def validate(self) -> None:
+    def validate(self) -> PapyrusSchema:
         try:
-            self.__schema = PapyrusSchema(vars=self.__data)
-        except ValueError as e:
-            logger.error("Validation failed:", e)
+            return PapyrusSchema(vars=self.__data)
+        except ValueError as err:
+            logger.error("Validation failed:", err)
+            raise err
 
     def get_data(self) -> Dict[str, Var]:
         return self.__data
